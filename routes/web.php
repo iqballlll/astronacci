@@ -4,12 +4,16 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Artisan;
 
-Route::get('/run-migrate', function () {
+Route::get('/create-session-table', function () {
     try {
-        Artisan::call('migrate --force');
-        return ' Migration Done!';
-    } catch (\Exception $e) {
-        return response('Error: ' . $e->getMessage(), 500);
+        \Artisan::call('session:table');
+        \Artisan::call('migrate', ['--force' => true]);
+        return 'Session table created and migrated!';
+    } catch (\Throwable $th) {
+        return response()->json([
+            'message' => 'Gagal',
+            'error' => $th->getMessage()
+        ], 500);
     }
 });
 

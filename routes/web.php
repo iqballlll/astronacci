@@ -5,11 +5,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/run-migrate', function () {
-    Artisan::call('migrate --force');
-    return ' Migration Done!';
+    try {
+        Artisan::call('migrate --force');
+        return ' Migration Done!';
+    } catch (\Exception $e) {
+        return response('Error: ' . $e->getMessage(), 500);
+    }
 });
 
 Route::get('/link-storage', function () {
-    Artisan::call('storage:link');
-    return ' Storage Linked!';
+    try {
+        Artisan::call('storage:link');
+        return response('Storage linked!', 200);
+    } catch (\Exception $e) {
+        return response('Error: ' . $e->getMessage(), 500);
+    }
 });
